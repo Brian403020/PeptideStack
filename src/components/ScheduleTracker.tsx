@@ -433,7 +433,7 @@ export default function ScheduleTracker({ lastUpdated }: ScheduleTrackerProps) {
           {stacks.length === 0 ? (
             <div className="text-center py-10">
               <p className="text-slate-500 text-xs font-semibold">
-                No active stacks found. Create a stack in the Stack Builder first.
+                No active stacks found. Create a stack in the Stack Stacker first.
               </p>
             </div>
           ) : checklistItems.length === 0 ? (
@@ -445,49 +445,80 @@ export default function ScheduleTracker({ lastUpdated }: ScheduleTrackerProps) {
               </p>
             </div>
           ) : (
-            <div className="space-y-2.5">
-              {checklistItems.map((item) => (
-                <div
-                  key={item.id}
-                  onClick={() =>
-                    handleToggleCheck(
-                      item.id,
-                      item.peptide.name,
-                      item.peptide.dosageMcg,
-                      item.time
-                    )
-                  }
-                  className={`flex items-center justify-between p-3.5 rounded-lg border transition-all cursor-pointer ${
-                    item.completed
-                      ? "bg-[#0A0D12]/30 border-slate-800/40 text-slate-500 line-through"
-                      : "bg-[#0A0D12] border-slate-800/85 hover:border-slate-700/80 text-slate-200"
-                  }`}
+            <div className="space-y-3">
+              {/* Dynamic Celebratory Banner when 100% Complete */}
+              {complianceRate === 100 && (
+                <motion.div
+                  initial={{ scale: 0.95, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  className="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 p-3 rounded-lg text-center space-y-1"
                 >
-                  <div className="flex items-center gap-3">
-                    <input
-                      type="checkbox"
-                      checked={item.completed}
-                      readOnly
-                      className="w-4.5 h-4.5 accent-emerald-500 rounded border-slate-700 bg-slate-900 cursor-pointer"
-                    />
-                    <div>
-                      <span className={`text-xs font-bold block ${item.completed ? "text-slate-600" : "text-slate-200"}`}>
-                        {item.peptide.name}
-                      </span>
-                      <span className="text-[9px] text-slate-500 font-bold flex items-center gap-1 mt-0.5">
-                        <Clock className="w-3 h-3" />
-                        {item.time} • {item.peptide.dosageMcg} mcg
+                  <p className="text-[11px] font-black uppercase tracking-wider font-mono flex items-center justify-center gap-1.5">
+                    🎉 PROTOCOL FULLY SECURED
+                  </p>
+                  <p className="text-[9px] text-slate-300 font-semibold leading-tight">
+                    All planned doses for this day have been successfully checked off. Excellent research compliance!
+                  </p>
+                </motion.div>
+              )}
+
+              <div className="space-y-2.5">
+                {checklistItems.map((item) => (
+                  <div
+                    key={item.id}
+                    onClick={() =>
+                      handleToggleCheck(
+                        item.id,
+                        item.peptide.name,
+                        item.peptide.dosageMcg,
+                        item.time
+                      )
+                    }
+                    className={`flex items-center justify-between p-3.5 rounded-lg border transition-all cursor-pointer select-none active:scale-[0.99] ${
+                      item.completed
+                        ? "bg-[#091512]/30 border-emerald-500/20 text-slate-400 line-through"
+                        : "bg-[#0A0D12] border-slate-800/85 hover:border-slate-700/80 text-slate-200 shadow-sm"
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="relative flex items-center justify-center">
+                        <input
+                          type="checkbox"
+                          checked={item.completed}
+                          readOnly
+                          className="sr-only"
+                        />
+                        <div className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all ${
+                          item.completed 
+                            ? "bg-emerald-500 border-emerald-500 text-white" 
+                            : "border-slate-700 bg-slate-900/60"
+                        }`}>
+                          {item.completed && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+                        </div>
+                      </div>
+                      <div>
+                        <span className={`text-xs font-bold block ${item.completed ? "text-slate-500" : "text-slate-200"}`}>
+                          {item.peptide.name}
+                        </span>
+                        <span className="text-[9px] text-slate-550 font-bold flex items-center gap-1 mt-0.5">
+                          <Clock className="w-3 h-3 text-slate-500" />
+                          {item.time} • <span className="text-indigo-400 font-mono">{item.peptide.dosageMcg} mcg</span>
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="text-right">
+                      <span className={`text-[9px] font-mono font-bold px-2 py-0.5 rounded border transition-colors ${
+                        item.completed 
+                          ? "text-slate-500 bg-slate-500/5 border-slate-500/10"
+                          : "text-emerald-400 bg-emerald-500/5 border-emerald-500/10"
+                      }`}>
+                        {item.peptide.calculatedUnits.toFixed(1)} Units
                       </span>
                     </div>
                   </div>
-
-                  <div className="text-right">
-                    <span className="text-[9px] font-mono font-bold text-emerald-400 bg-emerald-500/5 px-2 py-0.5 rounded border border-emerald-500/10">
-                      {item.peptide.calculatedUnits.toFixed(1)} Units
-                    </span>
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           )}
         </div>
