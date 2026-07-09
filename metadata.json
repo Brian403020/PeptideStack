@@ -1,0 +1,6 @@
+{
+  "name": "PeptideStack",
+  "description": "A comprehensive, high-precision peptide reconstitution calculator, interactive syringe visualizer, custom stack planner, and AI-powered research assistant.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
